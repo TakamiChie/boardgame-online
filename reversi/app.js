@@ -150,18 +150,12 @@ function renderSettings() {
         <input id="playerColor${index}" type="color" value="${player.color}" ${enabled ? "" : "disabled"}>
       </div>
       <div class="field-row">
-        <label for="playerCpu${index}">操作</label>
-        <select id="playerCpu${index}" ${enabled ? "" : "disabled"}>
-          <option value="human" ${player.isCpu ? "" : "selected"}>人間</option>
-          <option value="cpu" ${player.isCpu ? "selected" : ""}>CPU</option>
-        </select>
-      </div>
-      <div class="field-row">
-        <label for="playerCpuLevel${index}">CPU難易度</label>
-        <select id="playerCpuLevel${index}" ${enabled && player.isCpu ? "" : "disabled"}>
-          <option value="1" ${player.cpuLevel === 1 ? "selected" : ""}>やさしい</option>
-          <option value="2" ${player.cpuLevel === 2 ? "selected" : ""}>ふつう</option>
-          <option value="3" ${player.cpuLevel === 3 ? "selected" : ""}>つよい</option>
+        <label for="playerType${index}">操作</label>
+        <select id="playerType${index}" ${enabled ? "" : "disabled"}>
+          <option value="human" ${!player.isCpu ? "selected" : ""}>人間</option>
+          <option value="cpu-easy" ${player.isCpu && player.cpuLevel === 1 ? "selected" : ""}>CPU(やさしい)</option>
+          <option value="cpu-normal" ${player.isCpu && player.cpuLevel === 2 ? "selected" : ""}>CPU(ふつう)</option>
+          <option value="cpu-hard" ${player.isCpu && player.cpuLevel === 3 ? "selected" : ""}>CPU(つよい)</option>
         </select>
       </div>
     `;
@@ -169,22 +163,28 @@ function renderSettings() {
     playersConfig.appendChild(card);
 
     const colorInput = card.querySelector(`#playerColor${index}`);
-    const cpuSelect = card.querySelector(`#playerCpu${index}`);
-    const cpuLevelSelect = card.querySelector(`#playerCpuLevel${index}`);
+    const typeSelect = card.querySelector(`#playerType${index}`);
 
     colorInput.addEventListener("input", () => {
       settings.players[index].color = colorInput.value;
       saveSettings(settings);
     });
 
-    cpuSelect.addEventListener("change", () => {
-      settings.players[index].isCpu = cpuSelect.value === "cpu";
-      cpuLevelSelect.disabled = !enabled || !settings.players[index].isCpu;
-      saveSettings(settings);
-    });
-
-    cpuLevelSelect.addEventListener("change", () => {
-      settings.players[index].cpuLevel = Number(cpuLevelSelect.value);
+    typeSelect.addEventListener("change", () => {
+      const value = typeSelect.value;
+      if (value === "human") {
+        settings.players[index].isCpu = false;
+        settings.players[index].cpuLevel = 1;
+      } else if (value === "cpu-easy") {
+        settings.players[index].isCpu = true;
+        settings.players[index].cpuLevel = 1;
+      } else if (value === "cpu-normal") {
+        settings.players[index].isCpu = true;
+        settings.players[index].cpuLevel = 2;
+      } else if (value === "cpu-hard") {
+        settings.players[index].isCpu = true;
+        settings.players[index].cpuLevel = 3;
+      }
       saveSettings(settings);
     });
   });
@@ -196,14 +196,30 @@ function collectSettingsFromForm() {
     boardSize: Number(boardSizeSelect.value),
     players: settings.players.map((player, index) => {
       const colorInput = document.getElementById(`playerColor${index}`);
-      const cpuSelect = document.getElementById(`playerCpu${index}`);
-      const cpuLevelSelect = document.getElementById(`playerCpuLevel${index}`);
-
+      const typeSelect = document.getElementById(`playerType${index}`);
+      let isCpu = false;
+      let cpuLevel = 1;
+      if (typeSelect) {
+        const value = typeSelect.value;
+        if (value === "human") {
+          isCpu = false;
+          cpuLevel = 1;
+        } else if (value === "cpu-easy") {
+          isCpu = true;
+          cpuLevel = 1;
+        } else if (value === "cpu-normal") {
+          isCpu = true;
+          cpuLevel = 2;
+        } else if (value === "cpu-hard") {
+          isCpu = true;
+          cpuLevel = 3;
+        }
+      }
       return {
         name: `プレイヤー${index + 1}`,
         color: colorInput ? colorInput.value : player.color,
-        isCpu: cpuSelect ? cpuSelect.value === "cpu" : player.isCpu,
-        cpuLevel: cpuLevelSelect ? Number(cpuLevelSelect.value) : player.cpuLevel
+        isCpu,
+        cpuLevel
       };
     })
   };
