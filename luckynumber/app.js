@@ -28,6 +28,7 @@ const deckCountEl = document.getElementById('deck-count');
 const faceupListEl = document.getElementById('faceup-list');
 const heldTileEl = document.getElementById('held-tile');
 const discardHeldBtn = document.getElementById('discard-held-btn');
+const cancelHeldBtn = document.getElementById('cancel-held-btn');
 const playersArea = document.getElementById('players-area');
 const drawDeckBtn = document.getElementById('draw-deck-btn');
 const resetGameBtn = document.getElementById('reset-game-btn');
@@ -43,6 +44,7 @@ function init() {
 function bindGlobalEvents() {
   drawDeckBtn.addEventListener('click', onDrawDeck);
   discardHeldBtn.addEventListener('click', onDiscardHeld);
+  cancelHeldBtn.addEventListener('click', onCancelHeld);
   resetGameBtn.addEventListener('click', onResetGame);
   newGameBtn.addEventListener('click', () => {
     startNewGameFromSettings();
@@ -320,6 +322,7 @@ function renderGame() {
   const current = getCurrentPlayer();
   const currentIsHuman = current && current.kind === 'human';
   const canDiscardHeld = state.heldTile !== null && state.heldFrom === 'deck' && !state.gameOver;
+  const canCancelHeld = state.heldTile !== null && state.heldFrom === 'faceup' && !state.gameOver;
 
   statusEl.innerHTML = state.gameOver
     ? buildGameOverText()
@@ -338,6 +341,7 @@ function renderGame() {
   }
 
   discardHeldBtn.classList.toggle('hidden', !canDiscardHeld);
+  cancelHeldBtn.classList.toggle('hidden', !canCancelHeld);
   drawDeckBtn.disabled = !currentIsHuman || state.gameOver || state.heldTile !== null || state.drawPile.length === 0;
 
   renderFaceUpList(currentIsHuman);
@@ -488,7 +492,7 @@ function onTakeFaceUp(index) {
   const value = state.faceUp.splice(index, 1)[0];
   state.heldTile = value;
   state.heldFrom = 'faceup';
-  state.message = `テーブルの ${value} を取りました。これは必ず盤面に置いてください。`;
+  state.message = `テーブルの ${value} を取りました。`;
   saveGameState();
   render();
 }
@@ -513,6 +517,28 @@ function onDiscardHeld() {
   state.heldFrom = null;
 
   finishTurn();
+}
+
+function onCancelHeld() {
+  if (!state || state.gameOver) {
+    return;
+  }
+
+  const player = getCurrentPlayer();
+  if (player.kind !== 'human') {
+    return;
+  }
+  if (state.heldTile === null || state.heldFrom !== 'faceup') {
+    return;
+  }
+
+  state.faceUp.push(state.heldTile);
+  state.faceUp.sort((a, b) => a - b);
+  state.message = `${player.name} は ${state.heldTile} の取得をキャンセルしました。`;
+  state.heldTile = null;
+  state.heldFrom = null;
+  saveGameState();
+  render();
 }
 
 function onPlaceHeld(playerIndex, row, col) {
