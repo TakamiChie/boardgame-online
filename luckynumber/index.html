@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>ラッキーナンバー</title>
+</head>
+
+<body>
+  <div id="app">
+    <h1>ラッキーナンバー</h1>
+
+    <section id="setup-screen" class="panel"></section>
+
+    <section id="game-screen" class="hidden">
+      <div class="top-bar">
+        <div id="status"></div>
+        <div class="top-buttons">
+          <button id="new-game-btn" type="button">現在の設定で新規開始</button>
+        </div>
+      </div>
+
+      <div id="message" class="message"></div>
+
+      <div class="supply-area panel">
+        <h2>共通エリア</h2>
+        <div class="supply-row">
+          <div class="deck-box">
+            <button id="draw-deck-btn" type="button">山札から引く</button>
+            <div id="deck-count" class="deck-count"></div>
+          </div>
+
+          <div class="faceup-box">
+            <div class="faceup-title">表向きタイル</div>
+            <div id="faceup-list" class="faceup-list"></div>
+          </div>
+
+          <div class="holding-box">
+            <div class="holding-title">手元のタイル</div>
+            <div id="held-tile" class="held-tile empty">なし</div>
+            <button id="discard-held-btn" type="button" class="hidden">このタイルを表向きに出す</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="players-area" class="players-area"></div>
+
+      <div class="bottom-bar">
+        <button id="reset-game-btn" type="button" class="danger">ゲームリセット</button>
+      </div>
+    </section>
+  </div>
+  <script src="app.js"></script>
+</body>
+
+</html>

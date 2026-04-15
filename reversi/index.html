@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>マルチリバーシ</title>
+</head>
+
+<body>
+  <div class="app">
+    <header class="app-header">
+      <h1>マルチリバーシ</h1>
+    </header>
+
+    <section id="settingsScreen" class="screen">
+      <h2>試合設定</h2>
+
+      <div class="panel">
+        <div class="field-row">
+          <label for="playerCount">プレイヤー人数</label>
+          <select id="playerCount">
+            <option value="2">2人</option>
+            <option value="3">3人</option>
+            <option value="4">4人</option>
+          </select>
+        </div>
+
+        <div class="field-row">
+          <label for="boardSize">盤面サイズ</label>
+          <select id="boardSize">
+            <option value="6">6 x 6</option>
+            <option value="8">8 x 8</option>
+            <option value="10">10 x 10</option>
+            <option value="12">12 x 12</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="playersConfig" class="players-config"></div>
+
+      <div class="actions">
+        <button id="startGameButton" class="primary">ゲーム開始</button>
+      </div>
+    </section>
+
+    <section id="gameScreen" class="screen hidden">
+      <div class="top-bar">
+        <div id="turnInfo" class="turn-info"></div>
+        <div id="statusInfo" class="status-info"></div>
+      </div>
+
+      <div class="game-layout">
+        <div class="side-panel">
+          <h3>スコア</h3>
+          <div id="scoreBoard" class="score-board"></div>
+        </div>
+
+        <div class="board-wrap">
+          <div id="board" class="board"></div>
+        </div>
+      </div>
+
+      <div class="bottom-actions">
+        <button id="resetGameButton" class="danger">ゲームリセット</button>
+      </div>
+    </section>
+  </div>
+  <script src="app.js"></script>
+</body>
+
+</html>

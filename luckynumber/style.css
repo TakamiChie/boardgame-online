@@ -1,0 +1,275 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 16px;
+  background: #f4f7f1;
+  color: #233022;
+  font-family: sans-serif;
+}
+
+button {
+  cursor: pointer;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.panel {
+  background: #ffffff;
+  border: 1px solid #cfd8c8;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+h1 {
+  margin-top: 0;
+}
+
+h2,
+h3 {
+  margin-top: 0;
+}
+
+.setup-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.setup-block {
+  background: #f9fbf7;
+  border: 1px solid #d8e2d2;
+  border-radius: 10px;
+  padding: 12px;
+}
+
+.player-config-list {
+  display: grid;
+  gap: 10px;
+}
+
+.player-config-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.field-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.top-bar,
+.bottom-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.top-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.message {
+  min-height: 1.5em;
+  margin-bottom: 12px;
+  padding: 8px 10px;
+  background: #eef6ea;
+  border-radius: 8px;
+}
+
+.supply-area {
+  margin-bottom: 16px;
+}
+
+.supply-row {
+  display: grid;
+  grid-template-columns: 180px 1fr 220px;
+  gap: 16px;
+  align-items: start;
+}
+
+.deck-box,
+.faceup-box,
+.holding-box {
+  background: #f9fbf7;
+  border: 1px solid #d8e2d2;
+  border-radius: 10px;
+  padding: 12px;
+  min-height: 120px;
+}
+
+.deck-count,
+.faceup-title,
+.holding-title {
+  margin-top: 8px;
+  font-weight: bold;
+}
+
+.faceup-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.tile,
+.faceup-tile,
+.held-tile {
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  border: 2px solid #7ea16f;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #e9f4e2;
+  font-weight: bold;
+  font-size: 18px;
+  user-select: none;
+}
+
+.faceup-tile {
+  cursor: pointer;
+}
+
+.faceup-tile:hover,
+.board-cell.selectable:hover,
+.tile.selectable:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.held-tile.empty {
+  border-style: dashed;
+  background: #f3f3f3;
+  color: #777;
+}
+
+.players-area {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+}
+
+.player-panel {
+  background: #ffffff;
+  border: 2px solid #d7dfd1;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.player-panel.active {
+  border-color: #4b8d3a;
+  box-shadow: 0 0 0 3px rgba(75, 141, 58, 0.12);
+}
+
+.player-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.player-meta {
+  font-size: 13px;
+  color: #556453;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, 56px);
+  gap: 6px;
+  justify-content: start;
+}
+
+.board-cell {
+  width: 56px;
+  height: 56px;
+  border: 2px solid #b6c7ad;
+  border-radius: 10px;
+  background: #fbfdf9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  position: relative;
+}
+
+.board-cell.diagonal {
+  background: #fff7d8;
+}
+
+.board-cell.empty {
+  color: #a8b3a2;
+}
+
+.board-cell.selectable {
+  cursor: pointer;
+  border-color: #4b8d3a;
+}
+
+.board-cell.invalid {
+  opacity: 0.45;
+}
+
+.player-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: #edf3ea;
+}
+
+.win-badge {
+  background: #ffe27a;
+}
+
+.danger {
+  background: #b33d3d;
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+}
+
+.primary {
+  background: #4b8d3a;
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+}
+
+.secondary {
+  background: #e6ece3;
+  color: #233022;
+  border: 1px solid #cbd6c5;
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.small {
+  font-size: 12px;
+}
+
+@media (max-width: 900px) {
+  .supply-row {
+    grid-template-columns: 1fr;
+  }
+}
