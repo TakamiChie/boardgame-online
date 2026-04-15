@@ -137,23 +137,18 @@ function renderSetupScreen() {
   const playerRows = Array.from({ length: 4 }, (_, index) => {
     const p = settings.players[index];
     const disabled = index >= settings.playerCount ? 'disabled' : '';
+    const currentType = p.kind === 'human' ? 'human' : `cpu-${p.cpuLevel}`;
     return `
       <div class="setup-block">
         <h3>${escapeHtml(`プレイヤー${index + 1}`)}</h3>
         <div class="player-config-list">
           <div class="player-config-row">
-            <label for="player-kind-${index}">操作</label>
-            <select id="player-kind-${index}" data-player-index="${index}" data-role="kind" ${disabled}>
-              <option value="human" ${p.kind === 'human' ? 'selected' : ''}>人間</option>
-              <option value="cpu" ${p.kind === 'cpu' ? 'selected' : ''}>CPU</option>
-            </select>
-          </div>
-          <div class="player-config-row">
-            <label for="player-level-${index}">CPUレベル</label>
-            <select id="player-level-${index}" data-player-index="${index}" data-role="cpuLevel" ${disabled}>
-              <option value="easy" ${p.cpuLevel === 'easy' ? 'selected' : ''}>やさしい</option>
-              <option value="medium" ${p.cpuLevel === 'medium' ? 'selected' : ''}>ふつう</option>
-              <option value="hard" ${p.cpuLevel === 'hard' ? 'selected' : ''}>つよい</option>
+            <label for="player-type-${index}">操作</label>
+            <select id="player-type-${index}" data-player-index="${index}" data-role="type" ${disabled}>
+              <option value="human" ${currentType === 'human' ? 'selected' : ''}>人間</option>
+              <option value="cpu-easy" ${currentType === 'cpu-easy' ? 'selected' : ''}>CPU(やさしい)</option>
+              <option value="cpu-medium" ${currentType === 'cpu-medium' ? 'selected' : ''}>CPU(ふつう)</option>
+              <option value="cpu-hard" ${currentType === 'cpu-hard' ? 'selected' : ''}>CPU(つよい)</option>
             </select>
           </div>
         </div>
@@ -218,20 +213,18 @@ function renderSetupScreen() {
   });
 
   for (let i = 0; i < 4; i += 1) {
-    const kindEl = document.getElementById(`player-kind-${i}`);
-    const levelEl = document.getElementById(`player-level-${i}`);
+    const typeEl = document.getElementById(`player-type-${i}`);
 
-    if (kindEl) {
-      kindEl.addEventListener('change', (event) => {
-        settings.players[i].kind = event.target.value === 'cpu' ? 'cpu' : 'human';
-        saveSettings();
-      });
-    }
-
-    if (levelEl) {
-      levelEl.addEventListener('change', (event) => {
-        const next = event.target.value;
-        settings.players[i].cpuLevel = CPU_LEVELS.includes(next) ? next : 'easy';
+    if (typeEl) {
+      typeEl.addEventListener('change', (event) => {
+        const value = event.target.value;
+        if (value === 'human') {
+          settings.players[i].kind = 'human';
+          settings.players[i].cpuLevel = 'easy'; // デフォルト
+        } else if (value.startsWith('cpu-')) {
+          settings.players[i].kind = 'cpu';
+          settings.players[i].cpuLevel = value.substring(4); // 'cpu-easy' -> 'easy'
+        }
         saveSettings();
       });
     }
