@@ -68,7 +68,7 @@
             return fetch(`https://api.github.com/repos/${repoOwner}/${repoName}/contents/${dir.name}/index.html`)
               .then(res => res.json())
               .then(file => {
-                const content = atob(file.content);
+                const content = decodeBase64Utf8(file.content);
                 const titleMatch = content.match(/<title>(.*?)<\/title>/i);
                 const title = titleMatch ? titleMatch[1] : dir.name;
                 return { path: dir.name, title: title };
@@ -95,6 +95,15 @@
         li.appendChild(a);
         gameList.appendChild(li);
       });
+    }
+
+    function decodeBase64Utf8(base64) {
+      const binaryString = atob(base64.replace(/\s/g, ''));
+      const bytes = new Uint8Array(binaryString.length);
+      for (let i = 0; i < binaryString.length; i++) {
+        bytes[i] = binaryString.charCodeAt(i);
+      }
+      return new TextDecoder('utf-8').decode(bytes);
     }
   </script>
 </body>
