@@ -463,7 +463,7 @@ function onDrawDeck() {
   const value = state.drawPile.pop();
   state.heldTile = value;
   state.heldFrom = 'deck';
-  state.message = `山札から ${value} を引きました。盤面に置くか、表向きに出してください。`;
+  state.message = `山札から ${value} を引きました。盤面に置くか、テーブルに出してください。`;
   saveGameState();
   render();
 }
@@ -488,7 +488,7 @@ function onTakeFaceUp(index) {
   const value = state.faceUp.splice(index, 1)[0];
   state.heldTile = value;
   state.heldFrom = 'faceup';
-  state.message = `表向きの ${value} を取りました。これは必ず盤面に置いてください。`;
+  state.message = `テーブルの ${value} を取りました。これは必ず盤面に置いてください。`;
   saveGameState();
   render();
 }
@@ -507,7 +507,7 @@ function onDiscardHeld() {
   }
 
   state.faceUp.push(state.heldTile);
-  state.message = `${player.name} は ${state.heldTile} を表向きに出しました。`;
+  state.message = `${player.name} は ${state.heldTile} をテーブルに出しました。`;
   state.lastAction = { type: 'discard', value: state.heldTile };
   state.heldTile = null;
   state.heldFrom = null;
@@ -669,7 +669,7 @@ function runCpuTurn() {
   if (action.type === 'draw_and_discard') {
     const value = state.drawPile.pop();
     state.faceUp.push(value);
-    state.message = `${player.name} は山札から ${value} を引き、表向きに出しました。`;
+    state.message = `${player.name} は山札から ${value} を引き、テーブルに出しました。`;
     state.lastAction = { type: 'discard', value };
     finishTurn();
   }
@@ -681,7 +681,7 @@ function applyCpuPlacement(player, value, source, move) {
 
   if (replaced !== null) {
     state.faceUp.push(replaced);
-    state.message = `${player.name} は ${source === 'faceup' ? '表向き' : '山札'}の ${value} を置き、${replaced} と交換しました。`;
+    state.message = `${player.name} は ${source === 'faceup' ? 'テーブル' : '山札'}の ${value} を置き、${replaced} と交換しました。`;
     state.lastAction = {
       type: 'swap',
       placed: value,
@@ -690,7 +690,7 @@ function applyCpuPlacement(player, value, source, move) {
       col: move.col
     };
   } else {
-    state.message = `${player.name} は ${source === 'faceup' ? '表向き' : '山札'}の ${value} を置きました。`;
+    state.message = `${player.name} は ${source === 'faceup' ? 'テーブル' : '山札'}の ${value} を置きました。`;
     state.lastAction = {
       type: 'place',
       placed: value,
