@@ -343,6 +343,9 @@ function renderBoard() {
     validMoves.map((move) => [`${move.row},${move.col}`, move])
   );
 
+  const isHumanTurn = !gameState.players[gameState.currentPlayer].isCpu && !gameState.isFinished;
+  const noValidMoves = validMoves.length === 0;
+
   gameState.board.forEach((row, rowIndex) => {
     row.forEach((cell, colIndex) => {
       const cellEl = document.createElement("button");
@@ -351,12 +354,20 @@ function renderBoard() {
 
       const key = `${rowIndex},${colIndex}`;
       const move = validMap.get(key);
-      const isHumanTurn = !gameState.players[gameState.currentPlayer].isCpu && !gameState.isFinished;
 
       if (move && isHumanTurn) {
         cellEl.classList.add("valid");
         cellEl.addEventListener("click", () => {
           handleMove(rowIndex, colIndex);
+        });
+      } else if (noValidMoves && isHumanTurn) {
+        cellEl.classList.add("disabled");
+        cellEl.addEventListener("click", () => {
+          const player = gameState.players[gameState.currentPlayer];
+          advanceTurn(gameState, `${player.name} はパス`);
+          saveGame(gameState);
+          renderGame();
+          maybeRunCpuTurn();
         });
       } else {
         cellEl.classList.add("disabled");
@@ -423,7 +434,11 @@ function renderStatus() {
     turnInfoEl.textContent = `現在の手番: ${current.name}`;
   }
 
-  statusInfoEl.textContent = `${gameState.message} / 置ける場所: ${validMoves.length}`;
+  if (!gameState.isFinished && validMoves.length === 0 && !current.isCpu) {
+    statusInfoEl.textContent = "置ける場所がない。クリックして次へ。";
+  } else {
+    statusInfoEl.textContent = `${gameState.message} / 置ける場所: ${validMoves.length}`;
+  }
 }
 
 function cpuLabel(level) {
